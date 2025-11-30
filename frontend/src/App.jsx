@@ -42,7 +42,8 @@ const App = () => {
       relaxed: '😌',
       scared: '😨',
       playful: '🎾',
-      aggressive: '😡'
+      aggressive: '😡',
+      neutral: '😐'
     };
     return map[emotion.toLowerCase()] || '🐶';
   };
@@ -166,10 +167,10 @@ const App = () => {
               <div className="flex-1 relative rounded-2xl overflow-hidden shadow-lg border-4 border-white group">
                  <img src={previewUrl} alt="Dog Preview" className="w-full h-full object-cover" />
                  <button 
-                    type="button"
-                    onClick={resetApp}
-                    className="absolute top-3 right-3 bg-white/90 text-gray-700 p-2 rounded-full hover:bg-red-50 hover:text-red-500 transition-colors shadow-sm"
-                    title="Remove Image"
+                   type="button"
+                   onClick={resetApp}
+                   className="absolute top-3 right-3 bg-white/90 text-gray-700 p-2 rounded-full hover:bg-red-50 hover:text-red-500 transition-colors shadow-sm"
+                   title="Remove Image"
                  >
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                  </button>
@@ -214,7 +215,7 @@ const App = () => {
           {!prediction && !isLoading && !error && (
             <div className="text-center opacity-60">
                <div className="w-32 h-32 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-6xl">🐶</span>
+                 <span className="text-6xl">🐶</span>
                </div>
                <h3 className="text-2xl font-bold text-gray-700">Ready to understand your pet?</h3>
                <p className="text-gray-500 mt-2 max-w-xs mx-auto">Upload a clear photo of your dog's face to get started.</p>
@@ -233,16 +234,20 @@ const App = () => {
           {/* Success State */}
           {prediction && (
             <div className="animate-fade-in-up">
-              <div className="flex items-center justify-between mb-8">
-                <div>
+              <div className="flex flex-col sm:flex-row items-center sm:justify-between mb-8 gap-4">
+                <div className="text-center sm:text-left">
                   <p className="text-sm text-gray-500 font-semibold uppercase tracking-wider">Primary Emotion</p>
-                  <h2 className="text-5xl font-extrabold text-gray-800 mt-1 flex items-center gap-3">
+                  <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-800 mt-1 flex items-center justify-center sm:justify-start gap-3">
                     {prediction.predicted_emotion.charAt(0).toUpperCase() + prediction.predicted_emotion.slice(1)}
                     <span className="animate-bounce">{getEmotionEmoji(prediction.predicted_emotion)}</span>
                   </h2>
                 </div>
-                <div className="text-right">
-                   <div className="text-3xl font-black text-indigo-600">{prediction.confidence}%</div>
+                
+                {/* Result Display: Shows 10 decimal places, responsive sizing */}
+                <div className="text-center sm:text-right bg-white/50 px-6 py-2 rounded-xl sm:bg-transparent sm:p-0 overflow-hidden w-full sm:w-auto">
+                   <div className="text-xl sm:text-3xl font-black text-indigo-600 break-all">
+                     {Number(prediction.confidence).toFixed(10)}%
+                   </div>
                    <div className="text-xs text-gray-500 font-bold">CONFIDENCE</div>
                 </div>
               </div>
@@ -259,6 +264,7 @@ const App = () => {
                     <div key={emotion}>
                       <div className="flex justify-between text-sm mb-1">
                         <span className="font-semibold text-gray-600 capitalize">{emotion}</span>
+                        {/* Breakdown list kept clean at 1 decimal, but can be changed if needed */}
                         <span className="font-mono text-gray-500">{probability.toFixed(1)}%</span>
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
